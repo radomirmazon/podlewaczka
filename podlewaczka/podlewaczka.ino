@@ -12,10 +12,12 @@
 #include "configConst.h"
 #include "Configuration.h"
 #include "Executor.h"
+#include "Display.h"
 #include "NightController.h"
 #include "RainController.h"
-#include "ButtonController.h"
-#include "Display.h"
+#include "ButtonInput.h"
+#include "PRInput.h"
+
 
 //// core objects:
 MainConfiguration mainConfig;
@@ -42,9 +44,10 @@ Executor* executors[8];
 
 uint16_t execLimits[8];
 
-ButtonController buttonController;
+ButtonInput button;
+PRInput pr;
 
-Display display;
+Display* pDisplay = new Display(17, 11, 18, 12, 19, 16, 15, 13);
 RainController* pRainController = new RainController(&mainConfig);
 NightController* pNightController = new NightController(&mainConfig);
 
@@ -68,6 +71,7 @@ void setup() {
   config_6.setPin(8);
   config_7.setPin(9);
 
+
   //tablica limitow
   execLimits[0] = 5*60;
   execLimits[1] = 10*60;
@@ -82,36 +86,50 @@ void setup() {
 }
 
 void oneSecondTick() {
-    //uint_t runWitch, boolean enabled, uint8_t fill, boolean simulateLP
   pRainController->tick();
   pNightController->tick();
 }
 
 void fastTick() {
-  switch(buttonController.tick()) {
+  switch(button.tick()) 
+  {
     case BUTTON_PRESS:
+    //todo:
+    break;
+    case BUTTON_PRESS_PRE_LONG:
     //todo:
     break;
     case BUTTON_PRESS_LONG:
     //todo:
     break;
+    case BUTTON_PRESS_PRE_LONG2:
+    //todo: blink twice -> display.showPressPreLong2();
+    break;
+    case BUTTON_PRESS_LONG2:
+    //todo: blink onece -> display.showPressPreLong();
+    break;
+  }
+
+  switch(pr.tick()) 
+  {
     case ONCHAGE_PR_VALUE:
     //todo:
     break;
   }
 
-  display.tick();
+  pDisplay->tick();
 }
 
 void loadConfiguration() {
-  config_0.load(10, true, 80, false);
-  config_1.load(10, true, 80, false);
-  config_2.load( 1, true, 80, false);
-  config_3.load(10, true, 100, false);
-  config_4.load(10, true, 100, false);
-  config_5.load(10, false, 100, false);
-  config_6.load(10, false, 100, false);
-  config_7.load(10, false, 100, false);
+   //uint8_t runWitch, boolean enabled, uint8_t fill, boolean simulateLP
+  config_0.load(RUN_INDEPENDENTLY, true, 80, false);
+  config_1.load(RUN_INDEPENDENTLY, true, 80, false);
+  config_2.load(RUN_WITCH_CH1, true, 80, false);
+  config_3.load(RUN_INDEPENDENTLY, true, 100, false);
+  config_4.load(RUN_INDEPENDENTLY, true, 100, false);
+  config_5.load(RUN_INDEPENDENTLY, false, 100, false);
+  config_6.load(RUN_INDEPENDENTLY, false, 100, false);
+  config_7.load(RUN_INDEPENDENTLY, false, 100, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

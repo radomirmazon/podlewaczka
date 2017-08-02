@@ -18,9 +18,11 @@ class Configuration : public IConfiguration {
     }
     void setRunWith(uint8_t index) { this->pRunWith = index;}
     void setEnabled(boolean b) {this->enabled = b;}
+    boolean isEnabled() {return enabled;}
     void setFill(uint8_t f) {this->fill = f;}
     void setSimulateLowPresure(boolean b) {this->simulateLowPresure = b;}
     void setPin(uint8_t p) {pin = p;}
+    uint8_t getPin() {return pin;}
 
     virtual void serialize(uint8_t* data) {}
     virtual void deserialize(uint8_t* data) {}

@@ -6,14 +6,17 @@
 class Executor {
 
     public:
-    Executor(Configuration* pConfig) {this->pConfig = pConfig;}
+    Executor(Configuration* pConfig) {
+        this->pConfig = pConfig;
+        pinMode(pConfig->getPin(), OUTPUT);
+    }
+
     Configuration* getConfig() {
-        
         return pConfig;
     }
 
-    void update() {
-
+    boolean isEnabled() {
+        return pConfig->isEnabled();
     }
 
 
