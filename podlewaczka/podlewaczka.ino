@@ -21,6 +21,7 @@
 
 //// core objects:
 MainConfiguration mainConfig;
+PRInput pr;
 
 Configuration config_0;
 Configuration config_1;
@@ -31,21 +32,18 @@ Configuration config_5;
 Configuration config_6;
 Configuration config_7;
 
-Executor* executor_0 = new Executor(&config_0);
-Executor* executor_1 = new Executor(&config_1);
-Executor* executor_2 = new Executor(&config_2);
-Executor* executor_3 = new Executor(&config_3);
-Executor* executor_4 = new Executor(&config_4);
-Executor* executor_5 = new Executor(&config_5);
-Executor* executor_6 = new Executor(&config_6);
-Executor* executor_7 = new Executor(&config_7);
+Executor* executor_0 = new Executor(&config_0, &pr);
+Executor* executor_1 = new Executor(&config_1, &pr);
+Executor* executor_2 = new Executor(&config_2, &pr);
+Executor* executor_3 = new Executor(&config_3, &pr);
+Executor* executor_4 = new Executor(&config_4, &pr);
+Executor* executor_5 = new Executor(&config_5, &pr);
+Executor* executor_6 = new Executor(&config_6, &pr);
+Executor* executor_7 = new Executor(&config_7, &pr);
 
 Executor* executors[8];
 
-uint16_t execLimits[8];
-
 ButtonInput button;
-PRInput pr;
 
 Display* pDisplay = new Display(17, 11, 18, 12, 19, 16, 15, 13);
 RainController* pRainController = new RainController(&mainConfig);
@@ -71,21 +69,13 @@ void setup() {
   config_6.setPin(8);
   config_7.setPin(9);
 
-
-  //tablica limitow
-  execLimits[0] = 5*60;
-  execLimits[1] = 10*60;
-  execLimits[2] = 15*60;
-  execLimits[3] = 20*60;
-  execLimits[4] = 25*60;
-  execLimits[5] = 30*60;
-  execLimits[6] = 35*60;
-  execLimits[7] = 40*60;
-
   loadConfiguration();
 }
 
 void oneSecondTick() {
+  for (uint8_t i=0; i<8; i++) {
+    executors[i]->tick();
+  }
   pRainController->tick();
   pNightController->tick();
 }
