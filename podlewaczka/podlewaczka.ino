@@ -1,14 +1,14 @@
-/*
- * 1 - jz
- * 2 - ziel
- * 3 - jpom
- * 4 - pom
- * 5 - jbro
- * 6 - bro
- * 7 - nie
- * 8 - jnie
- */
-//void loadConfiguration();
+/**
+
+ Radomir Mazon (c) 2017
+ Project: podlewaczka
+ Elements: Arduino nano, fotoresistor, wate drops detector module, microswitch, 8x LEDs
+ Others: 5V power supply, executice module (base on relays, or transistors)
+ out of the box: wifi module, 
+ todo: add temperature module, add humidity module
+ long term todo: get data from weather serwice via external software on wifi module. 
+
+**/
 
 #include "configConst.h"
 #include "Configuration.h"
