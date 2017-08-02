@@ -6,6 +6,7 @@
  out of the box: wifi module, 
  todo: add temperature module, add humidity module
  long term todo: get data from weather serwice via external software on wifi module. 
+ .
 **/
 
 #include "configConst.h"
