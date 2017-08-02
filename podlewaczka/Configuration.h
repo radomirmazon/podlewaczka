@@ -20,6 +20,7 @@ class Configuration : public IConfiguration {
     void setEnabled(boolean b) {this->enabled = b;}
     boolean isEnabled() {return enabled;}
     void setFill(uint8_t f) {this->fill = f;}
+    uint8_t getFill() {return fill;}
     void setSimulateLowPresure(boolean b) {this->simulateLowPresure = b;}
     void setPin(uint8_t p) {pin = p;}
     uint8_t getPin() {return pin;}

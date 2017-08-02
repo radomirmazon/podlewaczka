@@ -11,6 +11,7 @@ class IDisplay {
     virtual void init()=0;
     virtual void preLongButtonPress()=0;
     virtual void preLong2ButtonPress()=0;
+    virtual void showExecTimeLimit(uint8_t value)=0;
     //etc...
 };
 
@@ -35,6 +36,7 @@ class Display : public IDisplay {
     virtual void init(){}
     virtual void preLongButtonPress(){}
     virtual void preLong2ButtonPress(){}
+    virtual void showExecTimeLimit(uint8_t value){}
 
     void tick() {
 
