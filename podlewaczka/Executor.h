@@ -32,8 +32,8 @@ class Executor {
         return pConfig;
     }
 
-    boolean isEnabled() {
-        return pConfig->isEnabled();
+    boolean isRunWith() {
+        return pConfig->isRunWith();
     }
 
     boolean isOn() {

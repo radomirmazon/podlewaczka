@@ -24,15 +24,15 @@ class ExecutorsLogic {
     }
 
     void loadConfiguration() {
-        //uint8_t runWitch, boolean enabled, uint8_t fill, boolean simulateLP
-        executorConfig[0].load(RUN_INDEPENDENTLY, true, 80, false);
-        executorConfig[1].load(RUN_INDEPENDENTLY, true, 80, false);
-        executorConfig[2].load(RUN_WITCH_CH1, true, 80, false);
-        executorConfig[3].load(RUN_INDEPENDENTLY, true, 100, false);
-        executorConfig[4].load(RUN_INDEPENDENTLY, true, 100, false);
-        executorConfig[5].load(RUN_INDEPENDENTLY, false, 100, false);
-        executorConfig[6].load(RUN_INDEPENDENTLY, false, 100, false);
-        executorConfig[7].load(RUN_INDEPENDENTLY, false, 100, false);
+        //boolean runWitch, boolean enabled, uint8_t fill
+        executorConfig[0].load(RUN_INDEPENDENTLY, true, 80);
+        executorConfig[1].load(RUN_INDEPENDENTLY, true, 80);
+        executorConfig[2].load(RUN_WITCH, true, 80);
+        executorConfig[3].load(RUN_INDEPENDENTLY, true, 100);
+        executorConfig[4].load(RUN_INDEPENDENTLY, true, 100);
+        executorConfig[5].load(RUN_INDEPENDENTLY, false, 100);
+        executorConfig[6].load(RUN_INDEPENDENTLY, false, 100);
+        executorConfig[7].load(RUN_INDEPENDENTLY, false, 100);
         setNumberOfCycle(2);
     }
 
@@ -43,8 +43,15 @@ class ExecutorsLogic {
         }
 
         if (!isRunning) {
+            if (executors[getExecutorIndex()]->isRunWith()) {
+                if (getExecutorIndex() != 0) {
+                    next();
+                }
+            }
+
             if (!executors[getExecutorIndex()]->isOn()) {
                 executors[getExecutorIndex()]->on();
+                fireRunWith(getExecutorIndex());
                 if (!executors[runningIndex]->isOn()) {
                     next();
                 }
@@ -71,10 +78,25 @@ class ExecutorsLogic {
     }
 
     void next() {
-        runningIndex++;
+        if (isRunning) {
+           runningIndex++;
+        }  else {
+            start();
+        }
     }
 
     private:
+    void fireRunWith(uint8_t index) {
+        if (index <7) {
+            for (uint8_t i=index+1; i<8; i++) {
+                if (executors[i]->isRunWith()) {
+                    executors[i]->on();
+                } else {
+                    break;
+                }
+            }
+        }
+    }
     uint8_t getExecutorIndex() {
         return runningIndex%8;
     }

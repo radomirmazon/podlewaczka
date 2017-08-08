@@ -2,23 +2,57 @@
 #define TIMER_LOGIC_H_
 
 #include "configConst.h"
+#include "ExecutorsLogic.h"
+#include "nightController.h"
+#include "rainController.h"
 
 
 class TimerLogic {
 
   public:
-    TimerLogic() {
-       runAfterDark[0] = 3*60*60; //3 hour after dark
-       runAfterDark[1] = 0; //run after runAfterDark[0]
+    TimerLogic(MainConfiguration* config, ExecutorsLogic* executorsLogic, NightController* nightController, RainController* rainController) {
+        this->config= config;
+        this->executorsLogic= executorsLogic;
+        this->nightController= nightController;
+        this->rainController= rainController;
     }
 
-   void tick() {
+    void onButtonPress() {
+        gotoManualMode();
+    }
 
-   }
+    void onButtonPressLong() {
+        gotoAutoMode();
+    }
    
-  private:
-    uint32_t runAfterDark[2];
+    void tick() {
+        if (isRunning()) {
 
+        } 
+     
+    }
+
+  private:
+    boolean isRunning() {
+        uint32_t howLongAfterDark = nightController->howLong();
+        return howLongAfterDark >= (config->secondAfterDark) && isAutoMode;
+    }
+
+    void gotoManualMode() {
+        executorsLogic->next();
+        isAutoMode = false;
+    }
+
+    void gotoAutoMode() {
+        executorsLogic->stop();
+        isAutoMode = true;
+    }
+
+    boolean isAutoMode = false;
+    MainConfiguration* config;
+    ExecutorsLogic* executorsLogic;
+    NightController* nightController;
+    RainController* rainController;
 };
 
 

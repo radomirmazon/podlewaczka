@@ -29,7 +29,7 @@ ButtonInput button;
 Display* pDisplay;
 RainController* pRainController;
 NightController* pNightController;
-TimerLogic timerLogic;
+TimerLogic* pTimerLogic;
 
 void setup() {
   Serial.begin(9600);  //Begin serial communcation
@@ -40,42 +40,45 @@ void setup() {
 
   pExecutorsLogic = new ExecutorsLogic(&mainConfig, &pr);
   pExecutorsLogic->loadConfiguration();
+
+  pTimerLogic = new TimerLogic(&mainConfig, pExecutorsLogic, pNightController, pRainController);
 }
 
 void oneSecondTick() {
   pRainController->tick();
   pNightController->tick();
   pExecutorsLogic->tick();
-  timerLogic.tick();
+  pTimerLogic->tick();
 }
 
 void fastTick() {
   switch(button.tick()) 
   {
     case BUTTON_PRESS:
-    //todo:
+      pTimerLogic->onButtonPress();
     break;
     case BUTTON_PRESS_PRE_LONG:
-    //todo:
+      //todo: blink twice -> display.showPressPreLong();
     break;
     case BUTTON_PRESS_LONG:
-    //todo:
+      pTimerLogic->onButtonPressLong();
     break;
     case BUTTON_PRESS_PRE_LONG2:
-    //todo: blink twice -> display.showPressPreLong2();
+      //
     break;
     case BUTTON_PRESS_LONG2:
-    //todo: blink onece -> display.showPressPreLong();
+      // 
     break;
   }
 
   switch(pr.tick()) 
   {
     case ONCHAGE_PR_VALUE:
-    //todo:
+    //todo: always show value on display
     break;
   }
 
+  //refresh display
   pDisplay->tick();
 }
 
@@ -86,6 +89,7 @@ void loop() {
   time = millis();
   if (time - lastTime > 1000) {
     oneSecondTick();
+    lastTime = time;
   }
   if ((time - lastTime) % 50 == 0 ) {
     fastTick();

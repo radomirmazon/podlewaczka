@@ -10,28 +10,30 @@ class NightController {
     public:
     NightController(MainConfiguration* config) {
         pConfiguration = config;
-        counter = 0;
         pinMode(LIGHT, INPUT);
-    }
-
-    void tick() {
-        counter++;
     }
 
     boolean isNight() {
         return LIGHT_NIGHT > analogRead(LIGHT);
     }
 
-    uint32_t howLong() {
-        if (!isNight()) {
+    void tick() {
+        counter++;
+        boolean isn = isNight();
+        if (wasNight != isn && isn) {
             counter = 0;
-        }
+        }   
+        wasNight = isn;
+    }
+
+    uint32_t howLong() {
         return counter;
     }
 
     private:
     MainConfiguration* pConfiguration;
-    uint32_t counter;
+    uint32_t counter = 0;
+    boolean wasNight = false;
 
 };
 

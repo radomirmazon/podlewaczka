@@ -9,19 +9,17 @@ class IConfiguration {
 class Configuration : public IConfiguration {
 
     public:
-    uint8_t getRunWith() { return pRunWith;}
-    void load(uint8_t runWitch, boolean enabled, uint8_t fill, boolean simulateLP) {
+    boolean isRunWith() { return runWith;}
+    void load(boolean runWitch, boolean enabled, uint8_t fill) {
         setRunWith(runWitch);
         setEnabled(enabled);
         setFill(fill);
-        setSimulateLowPresure(simulateLP);
     }
-    void setRunWith(uint8_t index) { this->pRunWith = index;}
+    void setRunWith(boolean b) { this->runWith = b;}
     void setEnabled(boolean b) {this->enabled = b;}
     boolean isEnabled() {return enabled;}
     void setFill(uint8_t f) {this->fill = f;}
     uint8_t getFill() {return fill;}
-    void setSimulateLowPresure(boolean b) {this->simulateLowPresure = b;}
     void setPin(uint8_t p) {pin = p;}
     uint8_t getPin() {return pin;}
 
@@ -32,8 +30,7 @@ class Configuration : public IConfiguration {
     uint8_t pin;
     boolean enabled;
     uint8_t fill; //in % 0 - 100
-    boolean simulateLowPresure = false;
-    uint8_t pRunWith = 10; //index of executors table
+    boolean runWith = false;
 };
 
 class MainConfiguration : public IConfiguration {
@@ -41,7 +38,7 @@ class MainConfiguration : public IConfiguration {
     virtual void serialize(uint8_t* data) {}
     virtual void deserialize(uint8_t* data) {}
 
-    uint32_t secondAfterDark = 1400;
+    uint32_t secondAfterDark = 3*60*60;
 
     //After how many seconds we forget that it was raining
     // 12h = 432000
