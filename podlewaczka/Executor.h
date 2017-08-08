@@ -4,12 +4,17 @@
 #include "Configuration.h"
 #include "PRInput.h"
 
+/**
+Responsibility:
+Executor can on and off one of relay for some time. Time for "on" is set automaticaly. 
+**/
+
 class Executor {
 
     public:
-    Executor(Configuration* pConfig, PRInput* prInput) {
+    Executor(Configuration* pConfig, PRValue* prInput) {
         this->pConfig = pConfig;
-        this->prInput = prInput;
+        this->prValue = prValue;
         pinMode(pConfig->getPin(), OUTPUT);
         off();
         //limits execution time (in second)
@@ -62,15 +67,15 @@ class Executor {
 
     private:
     Configuration* pConfig;
-    PRInput* prInput;
+    PRInput* prValue;
     boolean internalState;
     uint32_t counterDown;
     uint16_t execLimits[8];
 
     uint16_t getExecLimit() {
-        uint8_t prValue = prInput->getPrValue();
-        if (prValue < 8) {
-            double sec = execLimits[prValue];
+        uint8_t prval = prValue->getPrValue();
+        if (prval < 8) {
+            double sec = execLimits[prval];
             double sec2 = sec * pConfig->getFill();
             return (uint16_t)(sec2/100);
         } 

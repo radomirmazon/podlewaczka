@@ -3,7 +3,11 @@
 
 #include "configConst.h"
 
-class PRInput {
+class PRValue {
+    virtual uint8_t getPrValue()=0;
+};
+
+class PRInput : public PRValue {
 
   public:
     PRInput() {
@@ -15,7 +19,7 @@ class PRInput {
         return readPR();
     }
 
-    uint8_t getPrValue() {
+    virtual uint8_t getPrValue() {
         return prValue;
     }
 

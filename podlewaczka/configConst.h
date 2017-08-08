@@ -7,6 +7,14 @@
 #define LIGHT 20
 #define LIGHT_NIGHT 50
 
+#define RELAY_0 2
+#define RELAY_1 3
+#define RELAY_2 4
+#define RELAY_3 5
+#define RELAY_4 6
+#define RELAY_5 7
+#define RELAY_6 8
+#define RELAY_7 9
 
 
 //sendback message
