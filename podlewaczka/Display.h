@@ -8,10 +8,10 @@
 
 class IDisplay {
     public:
-    virtual void init()=0;
     virtual void preLongButtonPress()=0;
     virtual void preLong2ButtonPress()=0;
     virtual void showExecTimeLimit(uint8_t value)=0;
+    virtual void showExecutor(uint8_t index, boolean state)=0;
     //etc...
 };
 
@@ -29,21 +29,74 @@ class Display : public IDisplay {
         ledPinout[7] = ch7;
         for (uint8_t i=0; i<8; i++) {
             pinMode(ledPinout[i], OUTPUT);
+            digitalWrite(ledPinout[i] ,HIGH);
+            delay(20);
+            digitalWrite(ledPinout[i] ,LOW);
+            intExecutorState[i] = false;
+        }
+        Serial.println("hello");
+    }
+
+    virtual void preLongButtonPress(){
+        for (uint8_t i=0; i<8; i++) {
+            digitalWrite(ledPinout[i] ,HIGH);
+        }
+           delay(100);
+        for (uint8_t i=0; i<8; i++) {
             digitalWrite(ledPinout[i] ,LOW);
         }
     }
+    
+    virtual void preLong2ButtonPress(){
+        preLongButtonPress();
+        delay(100);
+        preLongButtonPress();
+    } 
 
-    virtual void init(){}
-    virtual void preLongButtonPress(){}
-    virtual void preLong2ButtonPress(){}
-    virtual void showExecTimeLimit(uint8_t value){}
+    virtual void showExecTimeLimit(uint8_t value) {
+      prShowing = true;
+      prShowingCounter = 200;
+      if (value > 8) return;
+      for (uint8_t i=0; i<8; i++) {
+          if (i<value+1) {
+            digitalWrite(ledPinout[i] ,HIGH);
+          } else {
+            digitalWrite(ledPinout[i] ,LOW);
+          }
+      } 
+    }
+
+    virtual void showExecutor(uint8_t index, boolean state) {
+      if (index <8) {
+        intExecutorState[index] = state;
+      }
+    }
 
     void tick() {
-
+      if (prShowing) {
+        prShowingCounter--;
+        if (prShowingCounter == 0) {
+          prShowing = false;
+        }
+      } else {
+        update();
+      }
     }
 
     private:
+    void update() {
+      for (uint8_t i=0; i<8; i++) {
+          if (intExecutorState[i]) {
+             digitalWrite(ledPinout[i] ,HIGH);
+          } else {
+            digitalWrite(ledPinout[i] ,LOW);
+          }
+      }
+    }
     uint8_t ledPinout[8];
+    boolean intExecutorState[8];
+    boolean prShowing = false;
+    uint8_t prShowingCounter;
 };
 
 #endif // DISPLAY_H_

@@ -7,7 +7,7 @@
 class ExecutorsLogic {
 
     public:
-    ExecutorsLogic(MainConfiguration* config, PRValue* pr) {
+    ExecutorsLogic(MainConfiguration* config, PRValue* pr, IDisplay* display) {
         this->config = config;
           //pitout
         executorConfig[0].setPin(RELAY_0);
@@ -19,7 +19,7 @@ class ExecutorsLogic {
         executorConfig[6].setPin(RELAY_6);
         executorConfig[7].setPin(RELAY_7);
         for (uint8_t i=0 ;i<8; i++) {
-            executors[i] = new Executor(&executorConfig[i], pr);
+            executors[i] = new Executor(&(executorConfig[i]), pr, display, i);
         }
     }
 
@@ -38,17 +38,18 @@ class ExecutorsLogic {
 
     //one second internal propose ticker....
     void tick() {
+      
         for (uint8_t i=0; i<8; i++) {
             executors[i]->tick();
         }
 
-        if (!isRunning) {
+        if (isRunning) {
             if (executors[getExecutorIndex()]->isRunWith()) {
                 if (getExecutorIndex() != 0) {
                     next();
                 }
             }
-
+            
             if (!executors[getExecutorIndex()]->isOn()) {
                 executors[getExecutorIndex()]->on();
                 fireRunWith(getExecutorIndex());
@@ -61,7 +62,10 @@ class ExecutorsLogic {
             if (runningIndex >= runningIndexLimit) {
                 stop();
             }
+        
         }
+        
+
     }
 
     void start() {

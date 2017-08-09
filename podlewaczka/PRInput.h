@@ -4,7 +4,7 @@
 #include "configConst.h"
 
 class PRValue {
-    virtual uint8_t getPrValue()=0;
+    virtual uint8_t getValue()=0;
 };
 
 class PRInput : public PRValue {
@@ -19,7 +19,7 @@ class PRInput : public PRValue {
         return readPR();
     }
 
-    virtual uint8_t getPrValue() {
+    virtual uint8_t getValue() {
         return prValue;
     }
 

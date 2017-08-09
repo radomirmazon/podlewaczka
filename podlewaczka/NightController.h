@@ -3,7 +3,7 @@
 
 #include "configConst.h"
 
-#include "configuration.h"
+#include "Configuration.h"
 
 class NightController {
 

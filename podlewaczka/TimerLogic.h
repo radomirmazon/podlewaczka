@@ -3,8 +3,8 @@
 
 #include "configConst.h"
 #include "ExecutorsLogic.h"
-#include "nightController.h"
-#include "rainController.h"
+#include "NightController.h"
+#include "RainController.h"
 
 
 class TimerLogic {

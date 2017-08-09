@@ -38,43 +38,43 @@ void setup() {
   pRainController = new RainController(&mainConfig);
   pNightController = new NightController(&mainConfig);
 
-  pExecutorsLogic = new ExecutorsLogic(&mainConfig, &pr);
+  pExecutorsLogic = new ExecutorsLogic(&mainConfig, &pr, pDisplay);
   pExecutorsLogic->loadConfiguration();
 
   pTimerLogic = new TimerLogic(&mainConfig, pExecutorsLogic, pNightController, pRainController);
 }
 
 void oneSecondTick() {
-  pRainController->tick();
-  pNightController->tick();
+  //pRainController->tick();
+  //pNightController->tick();
   pExecutorsLogic->tick();
-  pTimerLogic->tick();
+  //pTimerLogic->tick();
 }
 
 void fastTick() {
   switch(button.tick()) 
   {
     case BUTTON_PRESS:
-      pTimerLogic->onButtonPress();
+      //pTimerLogic->onButtonPress();
+      Serial.println("x");
+      pExecutorsLogic->next();
     break;
     case BUTTON_PRESS_PRE_LONG:
-      //todo: blink twice -> display.showPressPreLong();
+      pDisplay->preLongButtonPress();
     break;
     case BUTTON_PRESS_LONG:
+    case BUTTON_PRESS_LONG2:
       pTimerLogic->onButtonPressLong();
     break;
     case BUTTON_PRESS_PRE_LONG2:
-      //
-    break;
-    case BUTTON_PRESS_LONG2:
-      // 
+      pDisplay->preLong2ButtonPress();
     break;
   }
 
   switch(pr.tick()) 
   {
     case ONCHAGE_PR_VALUE:
-    //todo: always show value on display
+      pDisplay->showExecTimeLimit(pr.getValue()); 
     break;
   }
 
