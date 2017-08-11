@@ -48,6 +48,58 @@ class ButtonInput {
     }
 };
 
+/**
+    This class add virtual button function after long press 2
+    It's works 5 second from last click.
+**/
+class ExtraButtonDecoder {
+    public:
+        uint8_t decode(uint8_t buttonCode) {
+            uint8_t result = buttonCode;
+            if (buttonCode == BUTTON_PRESS_LONG2) {
+                activeExtra();
+            }
+
+            if (isExtraButton()) {
+                if (buttonCode != NO_MESSAGE) {
+                  activeExtra();
+                }
+                //decode:
+                switch(buttonCode) {
+                    case BUTTON_PRESS:
+                        result = BUTTON_EXTRA_PRESS;
+                        break;
+                    case BUTTON_PRESS_PRE_LONG:
+                        result = BUTTON_EXTRA_PRE_LONG_PRESS;
+                        break;
+                    case BUTTON_PRESS_LONG:
+                        result = BUTTON_EXTRA_LONG_PRESS;
+                        break;
+                }
+            } 
+            
+
+            return result;
+        }
+
+        void tick() {
+            if (extraCounterDown > 0) {
+                extraCounterDown--;
+            }
+        }
+
+        boolean isExtraButton() {
+            return extraCounterDown > 0;
+        }
+
+    private:
+        void activeExtra() {
+            extraCounterDown = HOW_LONG_PR_SHOW;
+        }
+        
+        uint16_t extraCounterDown = 0;
+};
+
 
 
 #endif // INPUT_CON_H_

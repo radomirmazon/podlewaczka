@@ -20,15 +20,6 @@ class Executor {
         this->id = id;
         pinMode(pConfig->getPin(), OUTPUT);
         off();
-        //limits execution time (in second)
-        execLimits[0] = 1;//5*60;
-        execLimits[1] = 1;//10*60;
-        execLimits[2] = 1;//15*60;
-        execLimits[3] = 1;//20*60;
-        execLimits[4] = 1;//25*60;
-        execLimits[5] = 1;//30*60;
-        execLimits[6] = 1;//35*60;
-        execLimits[7] = 1;//40*60;
     }
 
     Configuration* getConfig() {
@@ -61,21 +52,22 @@ class Executor {
     }
 
     void tick() {
-        if (counterDown == 0) {
-            off();
-            return;
-        } 
-
-        counterDown--;
+        if (isOn()) {
+            if (counterDown == 0) {
+                off();
+                return;
+            } else { 
+                counterDown--;
+            }
+        }
     }
 
 
     private:
     Configuration* pConfig;
-    PRInput* prValue;
+    PRValue* prValue;
     boolean internalState;
     uint32_t counterDown;
-    uint16_t execLimits[8];
     IDisplay* display;
     uint8_t id;
 
@@ -86,7 +78,7 @@ class Executor {
     uint16_t getExecLimit() {
         uint8_t prval = prValue->getValue();
         if (prval < 8) {
-            double sec = execLimits[prval];
+            double sec = (prval+1) * 60 * EXECUTION_LIMITS_STEP_IN_MINUTES;
             double sec2 = sec * pConfig->getFill();
             return (uint16_t)(sec2/100);
         } 

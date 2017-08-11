@@ -18,16 +18,25 @@
 
 
 //sendback message
-#define NO_MESSAGE   0
-#define BUTTON_PRESS 1
+#define NO_MESSAGE            0
+#define BUTTON_PRESS          1
 #define BUTTON_PRESS_PRE_LONG 2
-#define BUTTON_PRESS_LONG 3
+#define BUTTON_PRESS_LONG     3
 #define BUTTON_PRESS_PRE_LONG2 4
-#define BUTTON_PRESS_LONG2 5
+#define BUTTON_PRESS_LONG2    5
+#define BUTTON_EXTRA_PRESS    6
+#define BUTTON_EXTRA_PRE_LONG_PRESS 7
+#define BUTTON_EXTRA_LONG_PRESS 8
+
 #define ONCHAGE_PR_VALUE 10
 
 #define RUN_INDEPENDENTLY false
 #define RUN_WITCH true
+
+
+#define EXECUTION_LIMITS_STEP_IN_MINUTES 5
+
+#define HOW_LONG_PR_SHOW  800
 
 
 #endif // CONST_CON_H_

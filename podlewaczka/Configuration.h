@@ -10,10 +10,10 @@ class Configuration : public IConfiguration {
 
     public:
     boolean isRunWith() { return runWith;}
-    void load(boolean runWitch, boolean enabled, uint8_t fill) {
-        setRunWith(runWitch);
-        setEnabled(enabled);
-        setFill(fill);
+    void load(boolean _runWitch, boolean _enabled, uint8_t _fill) {
+        setRunWith(_runWitch);
+        setEnabled(_enabled);
+        setFill(_fill);
     }
     void setRunWith(boolean b) { this->runWith = b;}
     void setEnabled(boolean b) {this->enabled = b;}

@@ -15,10 +15,12 @@ class TimerLogic {
         this->executorsLogic= executorsLogic;
         this->nightController= nightController;
         this->rainController= rainController;
+        executorsLogic->setManualMode(true);
     }
 
     void onButtonPress() {
         gotoManualMode();
+        executorsLogic->next();
     }
 
     void onButtonPressLong() {
@@ -26,26 +28,39 @@ class TimerLogic {
     }
    
     void tick() {
+        //logika do implementacji
+        // - określanie reszczu
+        // - włączenie automatyczne
+        if (!isAutoMode) {
+            return;
+        }
+
+
         if (isRunning()) {
 
         } 
      
     }
 
-  private:
-    boolean isRunning() {
-        uint32_t howLongAfterDark = nightController->howLong();
-        return howLongAfterDark >= (config->secondAfterDark) && isAutoMode;
+    boolean isManual() {
+      return !isAutoMode;
     }
 
     void gotoManualMode() {
-        executorsLogic->next();
-        isAutoMode = false;
+      executorsLogic->setManualMode(true);
+      isAutoMode = false;
     }
 
     void gotoAutoMode() {
-        executorsLogic->stop();
-        isAutoMode = true;
+      executorsLogic->setManualMode(false);
+      executorsLogic->stop();
+      isAutoMode = true;
+    }
+    
+  private:
+    boolean isRunning() {
+      uint32_t howLongAfterDark = nightController->howLong();
+      return howLongAfterDark >= (config->secondAfterDark) && isAutoMode;
     }
 
     boolean isAutoMode = false;

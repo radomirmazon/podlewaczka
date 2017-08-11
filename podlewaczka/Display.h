@@ -12,6 +12,7 @@ class IDisplay {
     virtual void preLong2ButtonPress()=0;
     virtual void showExecTimeLimit(uint8_t value)=0;
     virtual void showExecutor(uint8_t index, boolean state)=0;
+    virtual void showManual(boolean isManual)=0;
     //etc...
 };
 
@@ -41,10 +42,11 @@ class Display : public IDisplay {
         for (uint8_t i=0; i<8; i++) {
             digitalWrite(ledPinout[i] ,HIGH);
         }
-           delay(100);
+        delay(60);
         for (uint8_t i=0; i<8; i++) {
             digitalWrite(ledPinout[i] ,LOW);
         }
+        delay(40);
     }
     
     virtual void preLong2ButtonPress(){
@@ -55,7 +57,7 @@ class Display : public IDisplay {
 
     virtual void showExecTimeLimit(uint8_t value) {
       prShowing = true;
-      prShowingCounter = 200;
+      prShowingCounter = HOW_LONG_PR_SHOW;
       if (value > 8) return;
       for (uint8_t i=0; i<8; i++) {
           if (i<value+1) {
@@ -72,6 +74,10 @@ class Display : public IDisplay {
       }
     }
 
+    virtual void showManual(boolean isManual) {
+      this->isManual = isManual;
+    }
+
     void tick() {
       if (prShowing) {
         prShowingCounter--;
@@ -80,6 +86,19 @@ class Display : public IDisplay {
         }
       } else {
         update();
+      }
+    }
+
+    void oneSecondTick() {
+      if (isManual && !prShowing) {
+        for (uint8_t i=0; i<8; i++) {
+            digitalWrite(ledPinout[i] ,HIGH);
+        }
+        delay(5);
+        for (uint8_t i=0; i<8; i++) {
+            digitalWrite(ledPinout[i] ,LOW);
+        }
+        delay(5);
       }
     }
 
@@ -96,7 +115,8 @@ class Display : public IDisplay {
     uint8_t ledPinout[8];
     boolean intExecutorState[8];
     boolean prShowing = false;
-    uint8_t prShowingCounter;
+    uint16_t prShowingCounter;
+    boolean isManual;
 };
 
 #endif // DISPLAY_H_

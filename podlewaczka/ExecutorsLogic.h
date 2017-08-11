@@ -24,13 +24,14 @@ class ExecutorsLogic {
     }
 
     void loadConfiguration() {
+      //TODO: move to EEPROM...
         //boolean runWitch, boolean enabled, uint8_t fill
         executorConfig[0].load(RUN_INDEPENDENTLY, true, 80);
-        executorConfig[1].load(RUN_INDEPENDENTLY, true, 80);
-        executorConfig[2].load(RUN_WITCH, true, 80);
+        executorConfig[1].load(RUN_WITCH, true, 80);
+        executorConfig[2].load(RUN_INDEPENDENTLY, true, 80);
         executorConfig[3].load(RUN_INDEPENDENTLY, true, 100);
         executorConfig[4].load(RUN_INDEPENDENTLY, true, 100);
-        executorConfig[5].load(RUN_INDEPENDENTLY, false, 100);
+        executorConfig[5].load(RUN_INDEPENDENTLY, true, 100);
         executorConfig[6].load(RUN_INDEPENDENTLY, false, 100);
         executorConfig[7].load(RUN_INDEPENDENTLY, false, 100);
         setNumberOfCycle(2);
@@ -38,39 +39,15 @@ class ExecutorsLogic {
 
     //one second internal propose ticker....
     void tick() {
-      
         for (uint8_t i=0; i<8; i++) {
             executors[i]->tick();
         }
-
-        if (isRunning) {
-            if (executors[getExecutorIndex()]->isRunWith()) {
-                if (getExecutorIndex() != 0) {
-                    next();
-                }
-            }
-            
-            if (!executors[getExecutorIndex()]->isOn()) {
-                executors[getExecutorIndex()]->on();
-                fireRunWith(getExecutorIndex());
-                if (!executors[runningIndex]->isOn()) {
-                    next();
-                }
-            }
-
-            //auto stop
-            if (runningIndex >= runningIndexLimit) {
-                stop();
-            }
-        
-        }
-        
-
     }
 
     void start() {
         stop();
-        isRunning = true;
+        runFirst();
+        update();
     }
 
     void stop() {
@@ -83,13 +60,61 @@ class ExecutorsLogic {
 
     void next() {
         if (isRunning) {
-           runningIndex++;
+            for (uint8_t i=0; i<8; i++) {
+                executors[i]->off();
+            }
+            update();
         }  else {
             start();
         }
     }
 
+    void update() {
+      if (isRunning) {
+        if (runningIndex < 8) {
+          
+          uint8_t nextIndex = runningIndex+1;
+          if (nextIndex >= 8) {
+            nextIndex = 7;
+          }
+          
+          if (!executors[runningIndex]->isOn() || executors[nextIndex]->isRunWith()) {
+            if (runningIndex <7) {
+              executors[runningIndex+1]->on();
+            }
+            runningIndex++;
+          }
+        } else {
+          cycle++;
+          if (cycle >= cycleLimit || isManualMode) {
+            stop();
+          } else {
+            uint8_t temp = cycle;
+            start();
+            cycle = temp;
+          }
+        }
+      }
+    }
+
+    void setManualMode(boolean b) {
+      this->isManualMode = b;
+    }
+
+    void onOff(uint8_t index, boolean state) {
+      if (index <8) {
+        executors[index]->on();
+      }
+    }
+
     private:
+    void runFirst() {
+        isRunning = true;
+        runningIndex = 0;
+        cycle = 0;
+        executors[0]->on();
+    }
+   
     void fireRunWith(uint8_t index) {
         if (index <7) {
             for (uint8_t i=index+1; i<8; i++) {
@@ -101,20 +126,19 @@ class ExecutorsLogic {
             }
         }
     }
-    uint8_t getExecutorIndex() {
-        return runningIndex%8;
-    }
 
     void setNumberOfCycle(uint8_t cycle) {
-        runningIndexLimit = 8*cycle;
+        this->cycleLimit = cycle;
     }
 
     Executor* executors[8];
     Configuration executorConfig[8];
     MainConfiguration* config;
     boolean isRunning = false;
+    boolean isManualMode;
     uint8_t runningIndex = 0;
-    uint8_t runningIndexLimit = 8*2;
+    uint8_t cycleLimit = 2;
+    uint8_t cycle = 0;
     
 };
 
