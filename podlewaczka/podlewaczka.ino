@@ -21,7 +21,6 @@
 #include "TimerLogic.h"
 #include "CommandLogic.h"
 
-
 //// core objects:
 ExecutorsLogic* pExecutorsLogic;
 MainConfiguration mainConfig;
@@ -45,7 +44,7 @@ void setup() {
   pExecutorsLogic->loadConfiguration();
 
   pTimerLogic = new TimerLogic(&mainConfig, pExecutorsLogic, pNightController, pRainController);
-  pCommandLogic = new CommandLogic(pExecutorsLogic, pTimerLogic);
+  pCommandLogic = new CommandLogic(pExecutorsLogic, pTimerLogic, &pr);
 }
 
 void oneSecondTick() {
@@ -55,6 +54,7 @@ void oneSecondTick() {
   pTimerLogic->tick();
   pDisplay->showManual(pTimerLogic->isManual());
   pDisplay->oneSecondTick();
+  sendStatus();
 }
 
 void fastTick() {
@@ -109,3 +109,42 @@ void loop() {
     fastTick();
   }
 }
+
+/*void getTemp() {
+  sensors.requestTemperatures();
+  DeviceAddress tempDeviceAddress; 
+  sensors.getAddress(tempDeviceAddress, 0);
+  tempC = sensors.getTempC(tempDeviceAddress);
+}*/
+/**
+ * Status Format:
+ * * EXECUTOR PART (17 bytes x8) + 1:
+ * E0{onoff},{fill},{en},{time}{runWith};
+ * 
+ * {onoff} - 0-off, 1-on
+ * {fill} - 000 <-> 100,  [in%]
+ * {en} - 0-dissable, 1-enable
+ * {time} - time to off, 0000 - 
+*  {runWith} - 0-no, 1-yes
+ *
+ * * SYSTEM PART 29 bytes:
+ * |{cycle},{mode}|{rain},{rainDecision}{rainCounter}{afterRain}|{night}{timeAfterNight},{secondAfterDark}|{rainForget},{rainTreshold};
+ * {cycle} - which cycle is or 0
+ * {mode} - A - auto, M- manual
+ * {rain} - R-no, '-'-yes
+ * {rainDecision} - 0-cant start Executors cos rain, 1-Execurots will be start
+ * {rainCounter} - from rain was started
+ * {afterRain} - from rain was finished
+ * {night} - D- day, N - night
+ * {timeAfterNight} - format: 00123 [sec] (max 24h - 86400sek, 5 bytes)
+ * {secondAfterDark} - is const treshold,  format: 00123 [sec] (max 24h - 86400sek, 5 bytes)
+ * {rainForget} - is const treshold,  format: 00123 [sec] (max 24h - 86400sek, 5 bytes)
+ * {rainTreshold} - is const treshold,  format: 00123 [sec] (max 24h - 86400sek, 5 bytes)
+ * 
+ */
+void sendStatus() {
+  pExecutorsLogic->print();
+  pTimerLogic->print();
+  Serial.println(";");
+}
+
