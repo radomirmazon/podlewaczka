@@ -19,17 +19,20 @@
 #include "PRInput.h"
 #include "ExecutorsLogic.h"
 #include "TimerLogic.h"
+#include "CommandLogic.h"
 
 
 //// core objects:
 ExecutorsLogic* pExecutorsLogic;
 MainConfiguration mainConfig;
-PRInput pr;
+SoftwarePRInput pr;
 ButtonInput button;
 Display* pDisplay;
 RainController* pRainController;
 NightController* pNightController;
 TimerLogic* pTimerLogic;
+ExtraButtonDecoder buttonDecoder;
+CommandLogic* pCommandLogic;
 
 void setup() {
   Serial.begin(9600);  //Begin serial communcation
@@ -42,33 +45,42 @@ void setup() {
   pExecutorsLogic->loadConfiguration();
 
   pTimerLogic = new TimerLogic(&mainConfig, pExecutorsLogic, pNightController, pRainController);
+  pCommandLogic = new CommandLogic(pExecutorsLogic, pTimerLogic);
 }
 
 void oneSecondTick() {
-  //pRainController->tick();
-  //pNightController->tick();
+  pRainController->tick();
+  pNightController->tick();
   pExecutorsLogic->tick();
-  //pTimerLogic->tick();
+  pTimerLogic->tick();
+  pDisplay->showManual(pTimerLogic->isManual());
+  pDisplay->oneSecondTick();
 }
 
 void fastTick() {
-  switch(button.tick()) 
+  switch(buttonDecoder.decode(button.tick())) 
   {
     case BUTTON_PRESS:
-      //pTimerLogic->onButtonPress();
-      Serial.println("x");
-      pExecutorsLogic->next();
-    break;
+      pTimerLogic->onButtonPress();
+      //pExecutorsLogic->next();
+      break;
     case BUTTON_PRESS_PRE_LONG:
+    case BUTTON_EXTRA_PRE_LONG_PRESS:
       pDisplay->preLongButtonPress();
-    break;
+      break;
     case BUTTON_PRESS_LONG:
-    case BUTTON_PRESS_LONG2:
+    case BUTTON_EXTRA_LONG_PRESS:
       pTimerLogic->onButtonPressLong();
-    break;
+      break;
     case BUTTON_PRESS_PRE_LONG2:
       pDisplay->preLong2ButtonPress();
-    break;
+      break;
+    case BUTTON_EXTRA_PRESS:
+      pr.next();
+      break;
+    case BUTTON_PRESS_LONG2:
+      pDisplay->showExecTimeLimit(pr.getValue()); 
+      break;
   }
 
   switch(pr.tick()) 
@@ -78,8 +90,10 @@ void fastTick() {
     break;
   }
 
-  //refresh display
   pDisplay->tick();
+  buttonDecoder.tick();
+  pExecutorsLogic->update();
+  pCommandLogic->tick();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
