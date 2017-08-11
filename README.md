@@ -9,11 +9,11 @@ M - go to manual mode
 
 N - run next executor (switch to manual mode)
 
-E0 - on executor 0 (executor switch on independently and automaticaly off after normal time to run).
+E0 - switch on executor 0 (executor switch on independently and automaticaly off after normal time to run).
 
 (...)  
 
-E7 - on executor 7
+E7 - switch on executor 7
 
-E8 - off all
+E8 - switch off all
 
