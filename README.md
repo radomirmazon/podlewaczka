@@ -17,7 +17,7 @@ User Guide:
 
 * One click button - enter to manual mode (all LEDs blinking every secend), and start first Executor. Executors switch on one by one like normal auto mode. Every click on button, switch next executon on.
 
-* Long click button to one blink LEDs - enter to auto mode. All LEDs are off. Device running auto mode algorithm.
+* Long click button to LEDs blink once - enter to auto mode. All LEDs are off. Device running auto mode algorithm.
 
 * Long click button to LEDs blink twice - LEDs show you level of how long Executor will be on. One LED means 5 min (you can set 5 to 40 min witch 5min steps). To exit in this mode, do nothing. After 3 seconds device automaticaly back.
 
