@@ -41,3 +41,23 @@ E7 - switch on executor 7
 
 E8 - switch off all
 
+P0 - set pr value to 1, atomic execution time 1*5min
+
+(...)
+
+P7 - set pr value to 8, atomic execution time 8*5min
+
+todo:
+
+F050 - Fill Executor 0 to 50% atomic execution time 
+
+R1 - set runWith for Executor 1
+
+secondAfterDark
+rainForget
+rainTreshold
+
+
+info:
+
+Time execution = cycle * fill * pr
