@@ -62,18 +62,41 @@ class Executor {
         }
     }
 
+    //{onoff},{fill},{en},{time},{runWith};
+    void print() {
+      char buf[6];
+      Serial.print(id);
+      Serial.print(internalState);
+      Serial.print(',');
+      sprintf(buf, "%03u,", pConfig->getFill());
+      Serial.print(buf);
+      if (pConfig->isEnabled()) {
+        Serial.print('E');
+      } else {
+        Serial.print('D');
+      }
+      Serial.print(',');
+      if (isOn()) {
+        sprintf(buf, "%04u,", counterDown);
+        Serial.print(buf);
+      } else {
+        Serial.print("0000,");
+      }
+      Serial.print(pConfig->isRunWith());
+      
+    }
 
     private:
-    Configuration* pConfig;
-    PRValue* prValue;
-    boolean internalState;
-    uint32_t counterDown;
-    IDisplay* display;
-    uint8_t id;
-
-    void showStatus() {
-      display->showExecutor(id, internalState); 
-    }
+      Configuration* pConfig;
+      PRValue* prValue;
+      boolean internalState;
+      uint32_t counterDown;
+      IDisplay* display;
+      uint8_t id;
+  
+      void showStatus() {
+        display->showExecutor(id, internalState); 
+      }
     
     uint16_t getExecLimit() {
         uint8_t prval = prValue->getValue();

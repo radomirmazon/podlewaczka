@@ -5,9 +5,10 @@
 
 class CommandLogic {
   public:
-  CommandLogic(ExecutorsLogic* executorLogic, TimerLogic* timerLogic) {
+  CommandLogic(ExecutorsLogic* executorLogic, TimerLogic* timerLogic, SoftwarePRInput* pr) {
     this->executorLogic = executorLogic;
     this->timerLogic = timerLogic;
+    this->pr = pr;
   }
   
   void tick() {
@@ -40,6 +41,11 @@ class CommandLogic {
           case 'M':
             timerLogic->gotoManualMode();
             break;
+          case 'P':
+            int p = param.toInt();
+            if (p>=0 && p<8) {
+              pr->setValue(p);
+            }
         }
     }
 
@@ -54,6 +60,7 @@ class CommandLogic {
     String readString;
     ExecutorsLogic* executorLogic;
     TimerLogic* timerLogic;
+    SoftwarePRInput* pr;
 };
 
 

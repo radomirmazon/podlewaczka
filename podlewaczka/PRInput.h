@@ -30,6 +30,9 @@ class SoftwarePRInput : public PRValue {
             }
         }
 
+        void setValue(uint8_t p) {
+          prValue = p;
+        }
     private:
       //TODO: move to EEPROM...
         uint8_t prValue = 4; //default in the middle

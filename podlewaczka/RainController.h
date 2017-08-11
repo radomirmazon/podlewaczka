@@ -42,16 +42,23 @@ class RainController {
         return canRun;
     }
 
+    boolean isRain() {
+        boolean result = analogRead(RAIN) < 500;
+        return result;
+    }
+
+    uint32_t getAfterRain() {
+      return afterRainCounter;
+    }
+
+    uint32_t getRainCounter() {
+      return rainCounter;
+    }
     private:
     MainConfiguration* pConfig;
     uint32_t rainCounter = 0;
     uint32_t afterRainCounter = 0;
     boolean canRun = true;
-
-    boolean isRain() {
-        boolean result = analogRead(RAIN) < 500;
-        return result;
-    }
 
 };
 

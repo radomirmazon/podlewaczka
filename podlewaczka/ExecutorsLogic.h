@@ -107,6 +107,24 @@ class ExecutorsLogic {
       }
     }
 
+    //{cycle},{mode},
+    void print() {
+      for (uint8_t i=0; i<8; i++) {
+        Serial.print('E');
+        executors[i]->print();
+        Serial.print(';');
+      }
+      Serial.print('|');
+      Serial.print(cycle);
+      Serial.print(',');
+      if (isManualMode) {
+        Serial.print('M');
+      } else {
+        Serial.print('A');
+      }
+      Serial.print('|');
+    }
+    
     private:
     void runFirst() {
         isRunning = true;

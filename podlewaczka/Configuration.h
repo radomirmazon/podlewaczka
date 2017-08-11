@@ -42,11 +42,11 @@ class MainConfiguration : public IConfiguration {
 
     //After how many seconds we forget that it was raining
     // 12h = 432000
-    uint32_t rainForget = 432000;
+    uint32_t rainForget =432000;
     //jak dlugo musi padac, zeby trac to po uwage
     //How long does it take to lose to lose it?
-    // 2h = 3600 deszcz + schnięcie
-    uint32_t rainTreshold = 3600;
+    // 2h = 3600 raun + drying
+    uint32_t rainTreshold = 7200;
 };
 
 #endif // CONFIG_H_

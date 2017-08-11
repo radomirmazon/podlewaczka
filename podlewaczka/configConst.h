@@ -2,7 +2,7 @@
 #define CONST_CON_H_
 
 #define BUTTON 10
-#define PR 14
+#define DS 14
 #define RAIN 21
 #define LIGHT 20
 #define LIGHT_NIGHT 50
