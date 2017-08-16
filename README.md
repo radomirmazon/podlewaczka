@@ -47,15 +47,30 @@ P0 - set pr value to 1, atomic execution time 1*5min
 
 P7 - set pr value to 8, atomic execution time 8*5min
 
+
+R0 - enabled runWith for Executor 0
+
+(...)
+
+R7 - enabled runWith for Executor 7
+
+T0 - disable runWith for Executor 0
+
+(...)
+
+T7 - disable runWith for Executor 7
+
+D123 - secondAfterDark (max 24h) [in seconds]
+G123 - rainForget (max 48h) [in seconds]
+T123 - rainTreshold (max 8h) [in seconds]
+
+
+
+
 todo:
 
 F050 - Fill Executor 0 to 50% atomic execution time 
 
-R1 - set runWith for Executor 1
-
-secondAfterDark
-rainForget
-rainTreshold
 
 
 info:
