@@ -32,29 +32,21 @@ Commands via Serial:
 * N - run next executor (switch to manual mode)
 * E0 - switch on executor 0 (executor switch on independently and automaticaly off after normal time to run).
 
-(...)  
-
-E7 - switch on executor 7
+(...)  E7 - switch on executor 7
 
 * E8 - switch off all
 * P0 - set pr value to 1, atomic execution time 1*5min
 
-(...)
-
-P7 - set pr value to 8, atomic execution time 8*5min
+(...) P7 - set pr value to 8, atomic execution time 8*5min
 
 
 * R0 - enabled runWith for Executor 0
 
-(...)
-
-R7 - enabled runWith for Executor 7
+(...) R7 - enabled runWith for Executor 7
 
 * T0 - disable runWith for Executor 0
 
-(...)
-
-T7 - disable runWith for Executor 7
+(...) T7 - disable runWith for Executor 7
 
 * D123 - secondAfterDark (max 24h) [in seconds]
 * G123 - rainForget (max 48h) [in seconds]
